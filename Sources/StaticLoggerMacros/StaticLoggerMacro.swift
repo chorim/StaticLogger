@@ -40,8 +40,8 @@ public struct StaticLogger: ExtensionMacro, MemberMacro {
         }
 
         let syntaxNodeString = """
-        extension StaticLoggerStore {
-            public static let \(declarationName) = Logger(subsystem: \(subsystem != nil ? "\"\(subsystem!)\"" : "Bundle.main.bundleIdentifier ?? \"\""), category: \"\(category != nil ? category! : declarationName)\")
+        extension \(declarationName) {
+            public static let Logger = os.Logger(subsystem: \(subsystem != nil ? "\"\(subsystem!)\"" : "Bundle.main.bundleIdentifier ?? \"\""), category: \"\(category != nil ? category! : declarationName)\")
         }
         """
         return try [ExtensionDeclSyntax(.init(stringLiteral: syntaxNodeString))]
@@ -56,8 +56,8 @@ public struct StaticLogger: ExtensionMacro, MemberMacro {
         guard let declarationName = declaration.as(ClassDeclSyntax.self)?.name.text ?? declaration.as(StructDeclSyntax.self)?.name.text ?? declaration.as(ActorDeclSyntax.self)?.name.text ?? declaration.as(EnumDeclSyntax.self)?.name.text else {
             throw Error.unknownDeclaration
         }
-
-        let syntaxNodeString = "private let logger = StaticLoggerStore.\(declarationName)"
+        
+        let syntaxNodeString = "let logger = Self.Logger"
 
         /*
         let syntaxNodeString = "static let logger = Logger(subsystem: \(subsystem != nil ? "\"\(subsystem!)\"" : "Bundle.main.bundleIdentifier ?? \"\""), category: \"\(category != nil ? category! : declarationName)\")"

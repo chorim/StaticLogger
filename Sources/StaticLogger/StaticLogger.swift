@@ -8,5 +8,3 @@ public macro StaticLogger(
     subsystem: String? = nil,
     category: String? = nil
 ) = #externalMacro(module: "StaticLoggerMacros", type: "StaticLogger")
-
-public struct StaticLoggerStore {}
